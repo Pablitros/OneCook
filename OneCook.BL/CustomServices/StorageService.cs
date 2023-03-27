@@ -17,7 +17,7 @@ namespace OneCook.BL.CustomServices
 
         public StorageService()
         {
-            blobContainerClient = new BlobContainerClient("DefaultEndpointsProtocol=https;AccountName=onecook;AccountKey=fLX51ZArneAn/fUdQpNxqYiXSW6xdE13N3MDNGbU1W8sqp6DgQw88ZZN11wvA/R53SRtirrSkeGkliZeYm3WKA==;EndpointSuffix=core.windows.net", "user-profile");
+            blobContainerClient = new BlobContainerClient("");
         }
         public async Task UploadFile(string name, IFormFile file)
         {
