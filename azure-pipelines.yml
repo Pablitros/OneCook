@@ -1,0 +1,51 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+
+- task: replacetokens@3
+  inputs:
+    targetFiles: '**/appsettings.json'
+    encoding: 'auto'
+    writeBOM: true
+    verbosity: 'detailed'
+    actionOnMissing: 'warn'
+    keepToken: false
+    tokenPrefix: '__'
+    tokenSuffix: '__'
+    useLegacyPattern: false
+    enableTransforms: false
+    enableTelemetry: true
+
+- task: NuGetToolInstaller@1
+  displayName: NuGet Install
+
+- task: NuGetCommand@2
+  displayName: NuGet Restore
+  inputs:
+    restoreSolution: '$(solution)'
+    
+- task: DotNetCoreCLI@2
+  displayName: Building App
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: Publishing App
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(System.DefaultWorkingDirectory)'
+    zipAfterPublish: True
+
+
